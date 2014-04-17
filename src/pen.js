@@ -53,7 +53,7 @@
       textarea: '<textarea name="content"></textarea>',
       list: [
         'blockquote', 'h2', 'h3', 'p', 'insertorderedlist', 'insertunorderedlist', 'inserthorizontalrule',
-        'indent', 'outdent', 'bold', 'italic', 'underline', 'createlink'
+        'indent', 'outdent', 'bold', 'italic', 'underline', 'createlink', 'insertimage'
       ]
     };
 
@@ -61,7 +61,7 @@
     if(config.nodeType === 1) {
       defaults.editor = config;
     } else if(config.match && config.match(/^#[\S]+$/)) {
-      defaults.editor = document.getElementById(config.slice(1));
+      defaults.editor = doc.getElementById(config.slice(1));
     } else {
       defaults = utils.copy(defaults, config);
     }
@@ -139,7 +139,8 @@
     for(var i = 0, list = this.config.list; i < list.length; i++) {
       var name = list[i], klass = 'pen-icon icon-' + name;
       icons += '<i class="' + klass + '" data-action="' + name + '">' + (name.match(/^h[1-6]|p$/i) ? name.toUpperCase() : '') + '</i>';
-      if((name === 'createlink')) icons += '<input class="pen-input" placeholder="http://" />';
+      if((name === 'createlink')) icons += '<input class="pen-input" data-inputtype="link" placeholder="http://" />';
+      if((name === 'insertimage')) icons += '<input class="pen-input" data-inputtype="image" placeholder="Image URL http://" />';
     }
 
     var menu = doc.createElement('div');
@@ -216,6 +217,27 @@
         return input.onkeypress;
       }
 
+      // insert image
+      if(action === 'insertimage') {
+        var input = menu.getElementsByTagName('input')[1], insertimage;
+
+        input.style.display = 'block';
+        input.focus();
+
+        insertimage = function(input) {
+          input.style.display = 'none';
+          if(input.value) return apply(input.value.replace(/(^\s+)|(\s+$)/g, '').replace(/^(?!http:\/\/|https:\/\/)(.*)$/, 'http://$1'));
+          action = 'unlink';
+          apply();
+        };
+
+        input.onkeypress = function(e) {
+          if(e.which === 13) return insertimage(e.target);
+        };
+
+        return input.onkeypress;
+      }
+
       apply();
     });
 
@@ -284,6 +306,11 @@
 
     overall = function(cmd, val) {
       var message = ' to exec 「' + cmd + '」 command' + (val ? (' with value: ' + val) : '');
+      // if(cmd === 'insertimage' && !!+[1,]){
+      //   //IE don't support insertHTML
+      //   cmd = 'insertHTML';
+      //   val = '<img src="' + val + '" alt="' + that._sel.toString() + '" title="' + that._sel.toString() + '" />';
+      // }
       if(document.execCommand(cmd, false, val) && that.config.debug) {
         utils.log('success' + message);
       } else {

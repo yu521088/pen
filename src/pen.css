@@ -102,6 +102,7 @@
 .pen-menu .icon-inserthorizontalrule:before { content: '\e818'; } /* '' */
 .pen-menu .icon-pin:before { content: '\e812'; } /* '' */
 .pen-menu .icon-createlink:before { content: '\e810'; } /* '' */
+.pen-menu .icon-insertimage:before { content: '\e812'; }
 
 .pen {
   position: relative;
@@ -158,3 +159,5 @@
 .pen.hinted a { text-decoration: none; }
 .pen.hinted a:before {content: "["; color: #ddd; }
 .pen.hinted a:after { content: "](" attr(href) ")"; color: #ddd; }
+.pen.hinted img:before { content: "["; color: #ddd; }
+.pen.hinted img:after{ content: "](" attr(src) ")"; color: #ddd; }
