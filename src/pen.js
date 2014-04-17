@@ -309,8 +309,8 @@
       if(cmd === 'insertimage' && !!+[1,]){
         //IE don't support insertHTML
         cmd = 'insertHTML';
-        val = '<i class="icon-beforeimage">[</i><img src="' + val + '" alt="' + that._sel.toString() + '" title="' + that._sel.toString() + '" />';
-        val += '<i class="icon-afterimage">](' + that._sel.toString() + ')</i>'
+        val = '<span class="icon-beforeimage">[</span><img src="' + val + '" alt="' + that._sel.toString() + '" title="' + that._sel.toString() + '" />';
+        val += '<span class="icon-afterimage">](' + that._sel.toString() + ')</span>'
       }
       if(document.execCommand(cmd, false, val) && that.config.debug) {
         utils.log('success' + message);
