@@ -1,79 +1,99 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <title>Pen - What You See Is What You Get (WYSIWYG)</title>
+  <style type="text/css">
+  *{padding:0;margin:0;}
+  html{border-top:10px #1abf89 solid;}
+  body{width:800px;margin:0 auto;padding:5% 20px 20px;font-family:Palatino, Optima, Georgia, serif;}
+  @media all and (max-width:1024px){ body, pre a{width:60%;} }
+  small{color:#999;}
+  #toolbar{margin-bottom:1em;position:fixed;left:20px;margin-top:5px;}
+  #toolbar [class^="icon-"]:before, #toolbar [class*=" icon-"]:before{font-family:'pen'}
+  #mode{color:#1abf89;;cursor:pointer;}
+  #mode.disabled{color:#666;}
+  #mode:before{content: '\e813';}
+  #hinted{color:#1abf89;cursor:pointer;}
+  #hinted.disabled{color:#666;}
+  #hinted:before{content: '\e816';}
 
-  <head>
-    <meta charset='utf-8' />
-    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
-    <meta name="description" content="Pen : enjoy live editing (+markdown)" />
+  #fork{position:fixed;right:0;top:0;}
+  </style>
+  <link rel="stylesheet" href="src/pen.css" />
+</head>
+<body>
 
-    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+<div id="toolbar">
+  <span id="mode" class="icon-mode"></span>
+  <span id="hinted" class="icon-pre disabled" title="Toggle Markdown Hints"></span>
+</div>
 
-    <title>Pen</title>
-  </head>
+<div data-toggle="pen" placeholder="im a placeholder">
+  <h2>Enjoy live editing (+markdown)</h2>
 
-  <body>
+  <p><b><i>Click to edit, Select to apply effect, click items of toolbar to toggle effects.</i></b></p>
+  <hr>
+  <p>Horizontal-Rule can be inserted by click「...」on the toolbar or just type「... 」/「--- 」/「*** 」at line start. Note that
+    there's a SPACE at the end of a command.</p>
+  <hr>
+  <p>To link or unlink, please press the <i>ENTER</i> key after you filled the input field with your a link. A <a
+    href="/sofish">link</a> can be unlink by applying an empty value to the input field.
 
-    <!-- HEADER -->
-    <div id="header_wrap" class="outer">
-        <header class="inner">
-          <a id="forkme_banner" href="https://github.com/yu521088/pen">View on GitHub</a>
+  <p>
+  <ul>
+    <li>Ordered list and unordered list are supported.</li>
+    <li>Use the toolbar or use markdown syntax like「<b>1. </b>」,「<b>- </b>」or「<b>* </b>」</li>
+  </ul>
+  <blockquote>You can quote text by type「<b>&gt;</b>」at line start.</blockquote>
+  <p>What about add underline to text? "<u>Stay Hungry, Stay Foolish - <i>Steve Jobs</i></u>".</p>
+  <pre>A code block is also supported by type 「```」 at line start and press SPACE.</pre>
+  <p>For more, please checkout: <a href="https://github.com/sofish/pen#readme" target="_blank">https://github.com/sofish/pen#readme</a>
+  </p>
+</div>
 
-          <h1 id="project_title">Pen</h1>
-          <h2 id="project_tagline">enjoy live editing (+markdown)</h2>
+<a id="fork" href="https://github.com/sofish/pen" target="_blank"><img
+  src="http://s3.amazonaws.com/github/ribbons/forkme_right_darkblue_121621.png" alt="Fork me on GitHub"></a>
 
-            <section id="downloads">
-              <a class="zip_download_link" href="https://github.com/yu521088/pen/zipball/master">Download this project as a .zip file</a>
-              <a class="tar_download_link" href="https://github.com/yu521088/pen/tarball/master">Download this project as a tar.gz file</a>
-            </section>
-        </header>
-    </div>
+<script src="src/pen.js"></script>
+<script src="src/markdown.js"></script>
+<script type="text/javascript">
 
-    <!-- MAIN CONTENT -->
-    <div id="main_content_wrap" class="outer">
-      <section id="main_content" class="inner">
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+  // config
+  var options = {
+    editor: document.querySelector('[data-toggle="pen"]'),
+    debug: true
+  };
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+  // create editor
+  var pen = new Pen(options);
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
-</code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+  // toggle editor mode
+  document.querySelector('#mode').addEventListener('click', function() {
+    var text = this.textContent;
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+    if(this.classList.contains('disabled')) {
+      this.classList.remove('disabled');
+      pen.rebuild();
+    } else {
+      this.classList.add('disabled');
+      pen.destroy();
+    }
+  });
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+  // toggle editor mode
+  document.querySelector('#hinted').addEventListener('click', function() {
+    var pen = document.querySelector('.pen')
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
-
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
-      </section>
-    </div>
-
-    <!-- FOOTER  -->
-    <div id="footer_wrap" class="outer">
-      <footer class="inner">
-        <p class="copyright">Pen maintained by <a href="https://github.com/yu521088">yu521088</a></p>
-        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
-      </footer>
-    </div>
-
-    
-
-  </body>
+    if(pen.classList.contains('hinted')) {
+      pen.classList.remove('hinted');
+      this.classList.add('disabled');
+    } else {
+      pen.classList.add('hinted');
+      this.classList.remove('disabled');
+    }
+  });
+</script>
+</body>
 </html>
