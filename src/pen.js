@@ -306,11 +306,12 @@
 
     overall = function(cmd, val) {
       var message = ' to exec 「' + cmd + '」 command' + (val ? (' with value: ' + val) : '');
-      // if(cmd === 'insertimage' && !!+[1,]){
-      //   //IE don't support insertHTML
-      //   cmd = 'insertHTML';
-      //   val = '<img src="' + val + '" alt="' + that._sel.toString() + '" title="' + that._sel.toString() + '" />';
-      // }
+      if(cmd === 'insertimage' && !!+[1,]){
+        //IE don't support insertHTML
+        cmd = 'insertHTML';
+        val = '<i class="icon-beforeimage">[</i><img src="' + val + '" alt="' + that._sel.toString() + '" title="' + that._sel.toString() + '" />';
+        val += '<i class="icon-afterimage">](' + that._sel.toString() + ')</i>'
+      }
       if(document.execCommand(cmd, false, val) && that.config.debug) {
         utils.log('success' + message);
       } else {

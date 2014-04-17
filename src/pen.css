@@ -76,6 +76,11 @@
   line-height: 1em;
   margin-left: .2em;
 }
+
+.icon-beforeimage,
+.icon-afterimage{
+  display: none;
+}
  
 .pen-menu .icon-location:before { content: '\e815'; } /* '' */
 .pen-menu .icon-fit:before { content: '\e80f'; } /* '' */
@@ -159,5 +164,9 @@
 .pen.hinted a { text-decoration: none; }
 .pen.hinted a:before {content: "["; color: #ddd; }
 .pen.hinted a:after { content: "](" attr(href) ")"; color: #ddd; }
-.pen.hinted img:before { content: "["; color: #ddd; }
-.pen.hinted img:after{ content: "](" attr(src) ")"; color: #ddd; }
+
+.pen.hinted img{ display: none; }
+.pen.hinted .icon-beforeimage,
+.pen.hinted .icon-afterimage{
+  display: inline;
+}
