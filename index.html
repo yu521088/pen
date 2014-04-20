@@ -62,7 +62,11 @@
   // config
   var options = {
     editor: document.querySelector('[data-toggle="pen"]'),
-    debug: true
+    debug: true,
+    list: [
+        'blockquote', 'h2', 'h3', 'p', 'insertorderedlist', 'insertunorderedlist', 'inserthorizontalrule',
+        'indent', 'outdent', 'bold', 'italic', 'underline', 'createlink', 'redo', 'undo'
+      ]
   };
 
   // create editor
